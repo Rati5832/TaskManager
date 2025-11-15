@@ -20,10 +20,12 @@ This project demonstrates
 
 ##  Architecture Stack
 
- Layer | Technologies 
-
  **API Layer** | ASP.NET Core Web API, Swagger/OpenAPI 
+
  **Application Layer** | CQRS, MediatR, FluentValidation, AutoMapper 
+
  **Infrastructure Layer** | Entity Framework Core, SQL Server 
+ 
  **Domain Layer** | Business Entities, DTOs 
+ 
  **Testing Layer** | xUnit, FluentAssertions, Moq 
