@@ -1,0 +1,40 @@
+# Visual Studio files
+.vs/
+.vscode/
+
+# Build output
+bin/
+obj/
+out/
+Debug/
+Release/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+
+# NuGet Packages
+*.nupkg
+packages/
+*.snupkg
+
+# Environment / configuration files
+**/appsettings.Development.json
+**/appsettings.Local.json
+**/local.settings.json
+secrets.json
+
+# EF Migrations debug
+_migration_backup/
+
+# Rider / JetBrains
+.idea/
+*.idea/
+
+# Publish output
+publish/
