@@ -28,7 +28,7 @@ namespace TaskManager.Api.Controllers
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> Get([FromRoute] Guid id)
         {
-            var command = new GetTaskCommand { Id = id };
+            var command = new GetTaskQuery { Id = id };
 
             var task = await _mediator.Send(command);
             if (task is null) return NotFound();

@@ -5,7 +5,7 @@ using TaskManager.Application.DTOs;
 
 namespace TaskManager.Application.Tasks.Commands.ReadTask
 {
-    public class GetTaskCommandHandler : IRequestHandler<GetTaskCommand, TodoTaskResponseDto>
+    public class GetTaskCommandHandler : IRequestHandler<GetTaskQuery, TodoTaskResponseDto>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -16,7 +16,7 @@ namespace TaskManager.Application.Tasks.Commands.ReadTask
             _mapper = mapper;
         }
 
-        public async Task<TodoTaskResponseDto> Handle(GetTaskCommand request, CancellationToken cancellationToken)
+        public async Task<TodoTaskResponseDto> Handle(GetTaskQuery request, CancellationToken cancellationToken)
         {
             var task = await _context.Tasks.FindAsync(request.Id, cancellationToken);
             if (task is null) return null;

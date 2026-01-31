@@ -20,6 +20,7 @@ builder.Services.AddAutoMapper(typeof(TaskMappingProfile).Assembly);
 builder.Services.AddValidatorsFromAssembly(typeof(ApplicationAssemblyMarker).Assembly);
 
 builder.Services.AddScoped<IApplicationDbContext, AppDbContext>();
+
 builder.Services.AddTransient(
     typeof(IPipelineBehavior<,>),
     typeof(ValidationBehavior<,>)
