@@ -13,11 +13,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString"));
+    options.UseInMemoryDatabase("TaskManagerDb");
 });
 
 builder.Services.AddMediatR(typeof(ApplicationAssemblyMarker).Assembly);
-builder.Services.AddAutoMapper(typeof(TaskMappingProfile).Assembly);
+
+builder.Services.AddAutoMapper(
+    config => { },
+    typeof(TaskMappingProfile).Assembly);
 
 builder.Services.AddValidatorsFromAssembly(typeof(ApplicationAssemblyMarker).Assembly);
 builder.Services.AddTransient(
@@ -33,6 +36,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+app.MapControllers();
 
 if (app.Environment.IsDevelopment())
 {
@@ -43,6 +47,5 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseMiddleware<ValidationExceptionMiddleware>();
 app.UseAuthorization();
-app.MapControllers();
 
 await app.RunAsync();

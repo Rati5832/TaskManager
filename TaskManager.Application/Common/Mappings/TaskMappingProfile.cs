@@ -8,7 +8,7 @@ namespace TaskManager.Application.Common.Mappings
     {
         public TaskMappingProfile()
         {
-            CreateMap<TodoTask, TodoTaskResponseDto>();
+            CreateMap<TodoTask, TodoTaskResponseDto>().ReverseMap();
         }
     }
 }

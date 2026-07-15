@@ -7,7 +7,7 @@ namespace TaskManager.Application.Common.Interfaces
 
         Task<TodoTask?> GetTaskById(Guid id, CancellationToken cancellationToken);
 
-        Task<Guid> CreateTaskAsync(TodoTask task, CancellationToken cancellationToken);
+        Task<TodoTask> CreateTaskAsync(TodoTask task, CancellationToken cancellationToken);
 
         Task<bool> UpdateTaskByIdAsync(Guid id, TodoTask task, CancellationToken cancellationToken);
 

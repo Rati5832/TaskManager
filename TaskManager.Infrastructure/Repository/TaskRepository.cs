@@ -13,12 +13,12 @@ namespace TaskManager.Infrastructure.Repository
             this._appDbContext = appDbContext;
         }
 
-        public async Task<Guid> CreateTaskAsync(TodoTask task, CancellationToken cancellationToken)
+        public async Task<TodoTask> CreateTaskAsync(TodoTask task, CancellationToken cancellationToken)
         {
             await _appDbContext.Tasks.AddAsync(task);
             await _appDbContext.SaveChangesAsync(cancellationToken);
 
-            return task.Id;
+            return task;
         }
 
         public async Task<bool> DeleteTaskByIdAsync(Guid id, CancellationToken cancellationToken)
