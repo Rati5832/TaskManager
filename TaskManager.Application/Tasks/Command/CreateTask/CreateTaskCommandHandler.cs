@@ -7,21 +7,23 @@ namespace TaskManager.Application.Tasks.Commands.CreateTask
 {
     public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, Guid>
     {
-        private readonly IApplicationDbContext _context;
+        private readonly ITaskRepository _repository;
 
-        public CreateTaskCommandHandler(IApplicationDbContext context)
+        public CreateTaskCommandHandler(ITaskRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         public async Task<Guid> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
         {
-            var task = new TodoTask { Title = request.Title };
-            _context.Tasks.Add(task);
+            var task = new TodoTask
+            {
+                Title = request.Title
+            };
 
-            await _context.SaveChangesAsync(cancellationToken);
+            var newTask = await _repository.CreateTaskAsync(task, cancellationToken);
 
-            return task.Id;
+            return newTask;
         }
     }
 }

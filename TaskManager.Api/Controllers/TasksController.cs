@@ -19,14 +19,14 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateTaskCommand command)
+        public async Task<IActionResult> Create(CreateTaskCommand command)
         {
             var id = await _mediator.Send(command);
             return CreatedAtAction(nameof(Create), new { id }, id);
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<IActionResult> Get([FromRoute] Guid id)
+        public async Task<IActionResult> Get(Guid id)
         {
             var command = new GetTaskQuery { Id = id };
 
@@ -37,7 +37,7 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateTaskCommand command)
+        public async Task<IActionResult> Update(Guid id, UpdateTaskCommand command)
         {
             command.Id = id;
             var result = await _mediator.Send(command);
@@ -51,11 +51,11 @@ namespace TaskManager.Api.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var command = new DeleteTaskCommand { Id = id };
+            var command = new DeleteTaskCommand(id);
 
             var result = await _mediator.Send(command);
 
-            if (result is null)
+            if (!result)
                 return NotFound();
 
             return Ok(result);

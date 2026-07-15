@@ -7,6 +7,7 @@ using TaskManager.Application.Common.Behaviours;
 using TaskManager.Application.Common.Interfaces;
 using TaskManager.Application.Common.Mappings;
 using TaskManager.Infrastructure.Data;
+using TaskManager.Infrastructure.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,16 +18,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddMediatR(typeof(ApplicationAssemblyMarker).Assembly);
 builder.Services.AddAutoMapper(typeof(TaskMappingProfile).Assembly);
+
 builder.Services.AddValidatorsFromAssembly(typeof(ApplicationAssemblyMarker).Assembly);
-
-builder.Services.AddScoped<IApplicationDbContext, AppDbContext>();
-
 builder.Services.AddTransient(
     typeof(IPipelineBehavior<,>),
     typeof(ValidationBehavior<,>)
 );
 builder.Services.AddTransient<ValidationExceptionMiddleware>();
 
+builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -45,4 +45,4 @@ app.UseMiddleware<ValidationExceptionMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();

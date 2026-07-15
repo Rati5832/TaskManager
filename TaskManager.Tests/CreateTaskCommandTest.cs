@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Moq;
+﻿using Moq;
 using TaskManager.Application.Common.Interfaces;
 using TaskManager.Application.Tasks.Commands.CreateTask;
 using TaskManager.Domain.Entities;
@@ -11,19 +10,20 @@ public class CreateTaskCommandTest
     [Fact]
     public async Task CreateTask_ShouldReturnId()
     {
-        var repo = new Mock<IApplicationDbContext>();
-        var mockSet = new Mock<DbSet<TodoTask>>();
+        var repo = new Mock<ITaskRepository>();
+        var expectedId = Guid.NewGuid();
 
-        repo.Setup(r => r.Tasks).Returns(mockSet.Object);
-        repo.Setup(r => r.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
+        repo.Setup(r => r.CreateTaskAsync(It.IsAny<TodoTask>(), It.IsAny<CancellationToken>())).ReturnsAsync(expectedId);
 
         var handler = new CreateTaskCommandHandler(repo.Object);
 
-
         var result = await handler.Handle(new CreateTaskCommand("Hello"), CancellationToken.None);
 
-        Assert.NotEqual(Guid.Empty, result);
-        mockSet.Verify(m => m.Add(It.IsAny<TodoTask>()), Times.Once);
-        repo.Verify(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+        Assert.Equal(expectedId, result);
+
+        repo.Verify(r => r.CreateTaskAsync(
+                It.Is<TodoTask>(task => task.Title == "Hello"),
+                It.IsAny<CancellationToken>()),
+                Times.Once);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using TaskManager.Application.Common.Interfaces;
 
 
@@ -7,9 +6,9 @@ namespace TaskManager.Application.Tasks.Commands.UpdateTask
 {
     public class UpdateTaskValidator : AbstractValidator<UpdateTaskCommand>
     {
-        private readonly IApplicationDbContext _context;
+        private readonly ITaskRepository _context;
 
-        public UpdateTaskValidator(IApplicationDbContext context)
+        public UpdateTaskValidator(ITaskRepository context)
         {
             _context = context;
 
@@ -21,7 +20,7 @@ namespace TaskManager.Application.Tasks.Commands.UpdateTask
 
         private async Task<bool> ShouldDifferentTitle(UpdateTaskCommand command, CancellationToken cancellationToken)
         {
-            var task = await _context.Tasks.FirstOrDefaultAsync(x => x.Id == command.Id, cancellationToken);
+            var task = await _context.GetTaskById(command.Id, cancellationToken);
 
             return task is null || task.Title != command.Title;
         }

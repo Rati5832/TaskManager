@@ -3,28 +3,30 @@ using AutoMapper;
 using MediatR;
 using TaskManager.Application.Common.Interfaces;
 using TaskManager.Application.DTOs;
+using TaskManager.Domain.Entities;
 
 namespace TaskManager.Application.Tasks.Commands.UpdateTask
 {
-    public class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand, TodoTaskResponseDto>
+    public class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand, TodoTaskResponseDto?>
     {
-        private readonly IApplicationDbContext _context;
+        private readonly ITaskRepository _repository;
         private readonly IMapper _mapper;
 
-        public UpdateTaskCommandHandler(IApplicationDbContext context, IMapper mapper)
+        public UpdateTaskCommandHandler(ITaskRepository repository, IMapper mapper)
         {
-            _context = context;
+            _repository = repository;
             _mapper = mapper;
         }
 
-        public async Task<TodoTaskResponseDto> Handle(UpdateTaskCommand request, CancellationToken cancellationToken)
+        public async Task<TodoTaskResponseDto?> Handle(UpdateTaskCommand request, CancellationToken cancellationToken)
         {
-            var task = await _context.Tasks.FindAsync(request.Id, cancellationToken);
-            if (task == null) return null;
+            var task = _mapper.Map<TodoTask>(request);
 
-            task.Title = request.Title;
-
-            await _context.SaveChangesAsync(cancellationToken);
+            var update = await _repository.UpdateTaskByIdAsync(request.Id, task, cancellationToken);
+            if (!update)
+            {
+                return null;
+            }
 
             return _mapper.Map<TodoTaskResponseDto>(task);
         }
